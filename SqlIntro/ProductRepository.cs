@@ -10,7 +10,7 @@ using MySql.Data.MySqlClient;
 
 namespace SqlIntro
 {
-    public class ProductRepository
+    public class ProductRepository : IProductRepository
     {
         private readonly string _connectionString;
 
@@ -18,6 +18,12 @@ namespace SqlIntro
         {
             _connectionString = connectionString;
         }
+
+        internal void DeleteProduct()
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Reads all the products from the products table
         /// </summary>
@@ -27,8 +33,10 @@ namespace SqlIntro
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
+
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "SELECT Name FROM product"; //TODO:  Write a SELECT statement that gets all products
+                cmd.CommandText = "SELECT Name FROM Product";
+
                 var dr = cmd.ExecuteReader();
                 while (dr.Read())
                 {
@@ -45,9 +53,12 @@ namespace SqlIntro
         {
             using (var conn = new MySqlConnection(_connectionString))
             {
+                conn.Open();
+
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "DELETE FROM product WHERE id = @id"; //Write a delete statement that deletes by id
+                cmd.CommandText = "DELETE FROM Product WHERE ProductId = @id"; 
                 cmd.Parameters.AddWithValue("@id", id);
+                cmd.ExecuteNonQuery();
             }
         }
         /// <summary>
@@ -60,8 +71,9 @@ namespace SqlIntro
             //More on this in the future...  Nothing to do here..
             using (var conn = new MySqlConnection(_connectionString))
             {
+                conn.Open();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "UPDATE product SET name = @name WHERE ProductId = @id";
+                cmd.CommandText = "UPDATE Product SET name = @name WHERE ProductId = @id";
                 cmd.Parameters.AddWithValue("@name", prod.Name);
                 cmd.Parameters.AddWithValue("@id", prod.Id);
                 cmd.ExecuteNonQuery();
@@ -75,8 +87,9 @@ namespace SqlIntro
         {
             using (var conn = new MySqlConnection(_connectionString))
             {
+                conn.Open();
                 var cmd = conn.CreateCommand();
-                cmd.CommandText = "INSERT INTO product (name) values(@name)";
+                cmd.CommandText = "INSERT INTO Product (Name) values(@name)";
                 cmd.Parameters.AddWithValue("@name", prod.Name);
                 cmd.ExecuteNonQuery();
 

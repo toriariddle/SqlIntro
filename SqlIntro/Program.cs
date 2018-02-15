@@ -8,17 +8,32 @@ namespace SqlIntro
         static void Main(string[] args)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["AdventureWorks"].ConnectionString;
-            //get connectionString format from connectionstrings.com and change to match your database
             var repo = new ProductRepository(connectionString);
+
+            Product product = null;
+
             foreach (var prod in repo.GetProducts())
             {
-                Console.WriteLine("Product Name:" + prod.Name + prod.Id);
+                if (product == null)
+                {
+                    product = prod;
+                }
+
+                Console.WriteLine("Product Name:" + prod.Name);
             }
 
-           
+            repo.DeleteProduct(3);
+
+            if (product != null)
+            {
+                product.Name = "Cody's Lame Product";
+                repo.UpdateProduct(product);
+            }
+
+
             Console.ReadLine();
         }
 
-       
+
     }
 }
