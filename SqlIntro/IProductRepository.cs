@@ -4,8 +4,10 @@ namespace SqlIntro
 {
     public interface IProductRepository
     {
-        void DeleteProduct(int id);
         IEnumerable<Product> GetProducts();
+        IEnumerable<Product> GetProductsAndReviews();
+        IEnumerable<Product> GetProductsWithReview();
+        void DeleteProduct(int id);
         void InsertProduct(Product prod);
         void UpdateProduct(Product prod);
     }

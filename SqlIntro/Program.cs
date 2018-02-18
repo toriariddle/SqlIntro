@@ -14,23 +14,26 @@ namespace SqlIntro
 
             foreach (var prod in repo.GetProducts())
             {
-                if (product == null && prod.Name == "Cody's Lame Product") { product = prod;}
+                if (product == null) { product = prod; }
 
-                Console.WriteLine("Product Name:" + prod.Name);
+                Console.WriteLine("Product Name: " + prod.Name);
             }
 
-            repo.DeleteProduct(3);
-
-            if (product != null)
+            foreach (var rate in repo.GetProductsWithReview())
             {
-                product.Name = "Cody's Lame Product";
-                repo.UpdateProduct(product);
+                if (product == null) { product = rate; }
+
+                Console.WriteLine("Product Name: " + rate.Name + " Rating: " + rate.Rating);
+
             }
 
+            foreach (var prod in repo.GetProductsAndReviews())
+            {
+                if (product == null) { product = prod; }
 
+                Console.WriteLine("Product Name: " + prod.Name);
+            }
             Console.ReadLine();
         }
-
-
     }
 }

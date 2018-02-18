@@ -61,14 +61,13 @@ namespace SqlIntro
                 cmd.ExecuteNonQuery();
             }
         }
+
         /// <summary>
         /// Updates the Product in the database
         /// </summary>
         /// <param name="prod"></param>
         public void UpdateProduct(Product prod)
         {
-            //This is annoying and unnecessarily tedious for large objects.
-            //More on this in the future...  Nothing to do here..
             using (var conn = new MySqlConnection(_connectionString))
             {
                 conn.Open();
@@ -79,6 +78,7 @@ namespace SqlIntro
                 cmd.ExecuteNonQuery();
             }
         }
+
         /// <summary>
         /// Inserts a new Product into the database
         /// </summary>
@@ -92,9 +92,40 @@ namespace SqlIntro
                 cmd.CommandText = "INSERT INTO Product (Name) values(@name)";
                 cmd.Parameters.AddWithValue("@name", prod.Name);
                 cmd.ExecuteNonQuery();
+            }
+        }
 
+        public IEnumerable<Product> GetProductsWithReview()
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT Name, Productid, Rating FROM product INNER JOIN productreview ON product.ProductId = productreview.ProductId";
+
+                var dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    yield return new Product { Name = dr["Rating"].ToString() };
+                }
+            }
+        }
+
+        public IEnumerable<Product> GetProductsAndReviews()
+        {
+            using (var conn = new MySqlConnection(_connectionString))
+            {
+                conn.Open();
+                var cmd = conn.CreateCommand();
+                cmd.CommandText = "SELECT Name, ProductId, Rating FROM product LEFT JOIN productreview ON product.ProductId = productreview.ProductId";
+
+                var dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    yield return new Product { Name = dr["Rating"].ToString() };
+                }
                 Console.ReadKey();
             }
         }
     }
-} 
+}
