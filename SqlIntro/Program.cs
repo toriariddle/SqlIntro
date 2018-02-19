@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using MySql.Data.MySqlClient;
 
 namespace SqlIntro
 {
@@ -8,6 +9,8 @@ namespace SqlIntro
         static void Main(string[] args)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["AdventureWorks"].ConnectionString;
+            var connection = new MySqlConnection(connectionString);
+
             var repo = new DapperProductRepository(connectionString);
 
             Product product = null;
